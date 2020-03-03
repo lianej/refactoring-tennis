@@ -4,9 +4,10 @@ import java.util.Objects;
 
 public class TennisGame1 implements TennisGame {
 
-    private int m_score1 = 0;
-    private int m_score2 = 0;
+    private int player1Score;
     private String player1Name;
+
+    private int player2Score;
     private String player2Name;
 
     public TennisGame1(String player1Name, String player2Name) {
@@ -15,17 +16,18 @@ public class TennisGame1 implements TennisGame {
     }
 
     public void wonPoint(String playerName) {
-        if (Objects.equals(playerName, player1Name))
-            m_score1 += 1;
-        else
-            m_score2 += 1;
+        if (Objects.equals(playerName, player1Name)) {
+            player1Score += 1;
+        } else {
+            player2Score += 1;
+        }
     }
 
     public String getScore() {
         StringBuilder score = new StringBuilder();
         int tempScore;
-        if (m_score1 == m_score2) {
-            switch (m_score1) {
+        if (player1Score == player2Score) {
+            switch (player1Score) {
                 case 0:
                     score = new StringBuilder("Love-All");
                     break;
@@ -40,8 +42,8 @@ public class TennisGame1 implements TennisGame {
                     break;
 
             }
-        } else if (m_score1 >= 4 || m_score2 >= 4) {
-            int minusResult = m_score1 - m_score2;
+        } else if (player1Score >= 4 || player2Score >= 4) {
+            int minusResult = player1Score - player2Score;
             if (minusResult == 1) {
                 score = new StringBuilder("Advantage " + player1Name);
             } else {
@@ -56,11 +58,10 @@ public class TennisGame1 implements TennisGame {
         } else {
             for (int i = 1; i < 3; i++) {
                 if (i == 1) {
-                    tempScore = m_score1;
-                }
-                else {
+                    tempScore = player1Score;
+                } else {
                     score.append("-");
-                    tempScore = m_score2;
+                    tempScore = player2Score;
                 }
                 switch (tempScore) {
                     case 0:
