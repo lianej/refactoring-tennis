@@ -10,6 +10,8 @@ public class TennisGame1 implements TennisGame {
     private int player2Score;
     private String player2Name;
 
+    String[] scoreMapping = new String[]{"Love","Fifteen","Thirty","Forty"};
+
     public TennisGame1(String player1Name, String player2Name) {
         this.player1Name = player1Name;
         this.player2Name = player2Name;
@@ -49,31 +51,7 @@ public class TennisGame1 implements TennisGame {
                 }
             }
         } else {
-            int tempScore;
-            StringBuilder score = new StringBuilder();
-            for (int i = 1; i < 3; i++) {
-                if (i == 1) {
-                    tempScore = player1Score;
-                } else {
-                    score.append("-");
-                    tempScore = player2Score;
-                }
-                switch (tempScore) {
-                    case 0:
-                        score.append("Love");
-                        break;
-                    case 1:
-                        score.append("Fifteen");
-                        break;
-                    case 2:
-                        score.append("Thirty");
-                        break;
-                    case 3:
-                        score.append("Forty");
-                        break;
-                }
-            }
-            return score.toString();
+            return String.format("%s-%s",scoreMapping[player1Score],scoreMapping[player2Score]);
         }
     }
 }
