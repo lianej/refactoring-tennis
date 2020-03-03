@@ -29,20 +29,7 @@ public class TennisGame1 implements TennisGame {
         if (player1Score < 4 && player2Score < 4) {
             return formatScoreBeforeScoreBothLessThan4();
         } else {
-            int minusResult = player1Score - player2Score;
-            if (minusResult == 1) {
-                return "Advantage " + player1Name;
-            } else {
-                if (minusResult == -1) {
-                    return "Advantage " + player2Name;
-                } else if (minusResult >= 2) {
-                    return "Win for " + player1Name;
-                } else if (minusResult <= -2) {
-                    return "Win for " + player2Name;
-                } else {
-                    return "Deuce";
-                }
-            }
+            return new Ranking().getScoreText();
         }
     }
 
@@ -60,5 +47,41 @@ public class TennisGame1 implements TennisGame {
             default:
                 return scoreText;
         }
+    }
+
+    private class Ranking {
+        Player leadPlayer;
+        Player backwardPlayer;
+
+        public Ranking() {
+            if (player1Score > player2Score) {
+                this.leadPlayer = new Player(player1Name, player1Score);
+                this.backwardPlayer = new Player(player2Name, player2Score);
+            } else {
+                this.leadPlayer = new Player(player2Name, player2Score);
+                this.backwardPlayer = new Player(player1Name, player1Score);
+            }
+        }
+
+        private String getScoreText() {
+            int delta = leadPlayer.score - backwardPlayer.score;
+            if(delta == 0){
+                return "Deuce";
+            }else if(delta == 1){
+                return "Advantage " + leadPlayer.name;
+            }else {
+                return "Win for " + leadPlayer.name;
+            }
+        }
+    }
+}
+
+class Player {
+    String name;
+    int score;
+
+    public Player(String name, int score) {
+        this.name = name;
+        this.score = score;
     }
 }
