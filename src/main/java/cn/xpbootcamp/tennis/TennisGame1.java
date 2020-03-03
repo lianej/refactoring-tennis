@@ -24,38 +24,33 @@ public class TennisGame1 implements TennisGame {
     }
 
     public String getScore() {
-        StringBuilder score = new StringBuilder();
-        int tempScore;
         if (player1Score == player2Score) {
             switch (player1Score) {
                 case 0:
-                    score = new StringBuilder("Love-All");
-                    break;
+                    return "Love-All";
                 case 1:
-                    score = new StringBuilder("Fifteen-All");
-                    break;
+                    return "Fifteen-All";
                 case 2:
-                    score = new StringBuilder("Thirty-All");
-                    break;
+                    return "Thirty-All";
                 default:
-                    score = new StringBuilder("Deuce");
-                    break;
-
+                    return "Deuce";
             }
         } else if (player1Score >= 4 || player2Score >= 4) {
             int minusResult = player1Score - player2Score;
             if (minusResult == 1) {
-                score = new StringBuilder("Advantage " + player1Name);
+                return "Advantage " + player1Name;
             } else {
                 if (minusResult == -1) {
-                    score = new StringBuilder("Advantage " + player2Name);
+                    return "Advantage " + player2Name;
                 } else if (minusResult >= 2) {
-                    score = new StringBuilder("Win for " + player1Name);
+                    return "Win for " + player1Name;
                 } else {
-                    score = new StringBuilder("Win for " + player2Name);
+                    return "Win for " + player2Name;
                 }
             }
         } else {
+            int tempScore;
+            StringBuilder score = new StringBuilder();
             for (int i = 1; i < 3; i++) {
                 if (i == 1) {
                     tempScore = player1Score;
@@ -78,7 +73,7 @@ public class TennisGame1 implements TennisGame {
                         break;
                 }
             }
+            return score.toString();
         }
-        return score.toString();
     }
 }
