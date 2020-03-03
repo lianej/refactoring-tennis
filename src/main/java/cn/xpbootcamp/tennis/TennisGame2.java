@@ -42,47 +42,12 @@ public class TennisGame2 implements TennisGame {
     }
 
     private void ifProgressing() {
-        String p1res = "";
-        String p2res = "";
-        if (player1Point > 0 && player2Point == 0) {
-            if (player1Point == 1)
-                p1res = "Fifteen";
-            if (player1Point == 2)
-                p1res = "Thirty";
-            if (player1Point == 3)
-                p1res = "Forty";
-
-            this.scoreText = p1res + "-" + "Love";
-        } else if (player2Point > 0 && player1Point == 0) {
-            if (player2Point == 1)
-                p2res = "Fifteen";
-            if (player2Point == 2)
-                p2res = "Thirty";
-            if (player2Point == 3)
-                p2res = "Forty";
-
-            this.scoreText = "Love" + "-" + p2res;
-        } else if (player1Point > player2Point && player1Point < 4) {
-            if (player1Point == 2)
-                p1res = "Thirty";
-            if (player1Point == 3)
-                p1res = "Forty";
-            if (player2Point == 1)
-                p2res = "Fifteen";
-            if (player2Point == 2)
-                p2res = "Thirty";
-            this.scoreText = p1res + "-" + p2res;
-        } else if (player2Point > player1Point && player2Point < 4) {
-            if (player2Point == 2)
-                p2res = "Thirty";
-            if (player2Point == 3)
-                p2res = "Forty";
-            if (player1Point == 1)
-                p1res = "Fifteen";
-            if (player1Point == 2)
-                p1res = "Thirty";
-            this.scoreText = p1res + "-" + p2res;
+        if (player1Point == player2Point || player1Point > 3 || player2Point > 3) {
+            return;
         }
+        String[] mapping = new String[]{"Love", "Fifteen", "Thirty", "Forty"};
+        this.scoreText = String.format("%s-%s", mapping[player1Point], mapping[player2Point]);
+
     }
 
     private void ifAdvantage() {
