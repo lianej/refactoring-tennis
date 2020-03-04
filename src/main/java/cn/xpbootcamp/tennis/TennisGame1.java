@@ -22,7 +22,9 @@ public class TennisGame1 implements TennisGame {
     }
 
     public String getScore() {
-        if (player1.isScoreLessThan4() && player2.isScoreLessThan4()) {
+        if (player1.isDeuceFor(player2)) {
+            return "Deuce";
+        } else if (player1.isScoreLessThan4() && player2.isScoreLessThan4()) {
             return formatScoreIfScoreBothLessThan4();
         } else {
             return formatScore();
@@ -56,8 +58,6 @@ public class TennisGame1 implements TennisGame {
                 return "Fifteen-All";
             case "Thirty-Thirty":
                 return "Thirty-All";
-            case "Forty-Forty":
-                return "Deuce";
             default:
                 return scoreText;
         }
@@ -66,9 +66,7 @@ public class TennisGame1 implements TennisGame {
     private String formatScore() {
         Player leadPlayer = getLeadPlayer();
         int delta = leadPlayer.score - getBackwardPlayer().score;
-        if (delta == 0) {
-            return "Deuce";
-        } else if (delta == 1) {
+        if (delta == 1) {
             return "Advantage " + leadPlayer.name;
         } else {
             return "Win for " + leadPlayer.name;
@@ -90,6 +88,10 @@ public class TennisGame1 implements TennisGame {
 
         private void wonPoint() {
             score++;
+        }
+
+        public boolean isDeuceFor(Player otherPlayer) {
+            return score >= 3 && score == otherPlayer.score;
         }
     }
 }
