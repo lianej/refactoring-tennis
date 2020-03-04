@@ -1,5 +1,7 @@
 package cn.xpbootcamp.tennis;
 
+import java.util.Optional;
+
 public class TennisGame2 implements TennisGame {
     public final Player player1 = new Player();
     public final Player player2 = new Player();
@@ -19,7 +21,10 @@ public class TennisGame2 implements TennisGame {
 
         ifAdvantage();
 
-        ifWin();
+        Optional<String> text = player1.ifWin(this.player2);
+        if(text.isPresent()){
+            scoreText = text.get();
+        }
         return scoreText;
     }
 
@@ -56,15 +61,6 @@ public class TennisGame2 implements TennisGame {
         }
     }
 
-    private void ifWin() {
-        if (player1.playerPoint >= 4 && player2.playerPoint >= 0 && (player1.playerPoint - player2.playerPoint) >= 2) {
-            this.scoreText = "Win for " + player1.playerName;
-        }
-        if (player2.playerPoint >= 4 && player1.playerPoint >= 0 && (player2.playerPoint - player1.playerPoint) >= 2) {
-            this.scoreText = "Win for " + player2.playerName;
-        }
-    }
-
     public void wonPoint(String player) {
         if (player.equals(player1.playerName))
             player1.playerPoint++;
@@ -75,5 +71,15 @@ public class TennisGame2 implements TennisGame {
     private static class Player {
         public String playerName;
         public int playerPoint = 0;
+
+        private Optional<String> ifWin(Player otherPlayer) {
+            if (playerPoint >= 4 && otherPlayer.playerPoint >= 0 && (playerPoint - otherPlayer.playerPoint) >= 2) {
+                return Optional.of("Win for " + playerName);
+            }
+            if (otherPlayer.playerPoint >= 4 && playerPoint >= 0 && (otherPlayer.playerPoint - playerPoint) >= 2) {
+                return Optional.of("Win for " + otherPlayer.playerName);
+            }
+            return Optional.empty();
+        }
     }
 }
