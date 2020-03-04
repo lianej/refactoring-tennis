@@ -4,44 +4,53 @@ import java.util.Objects;
 
 public class TennisGame3 implements TennisGame {
 
-    private int point1;
-    private String player1Name;
-
-    private int point2;
-    private String player2Name;
+    private final Player player1 = new Player();
+    private final Player player2 = new Player();
 
     public TennisGame3(String player1Name, String player2Name) {
-        this.player1Name = player1Name;
-        this.player2Name = player2Name;
+        this.player1.name = player1Name;
+        this.player2.name = player2Name;
     }
 
     public String getScore() {
-        if (point1 < 4 && point2 < 4 && point1 + point2 < 6) {
-            String[] pointScoreMapping = new String[]{"Love", "Fifteen", "Thirty", "Forty"};
-            String player1Score = pointScoreMapping[point1];
-            if (point1 == point2){
-                return player1Score + "-All";
-            }else {
-                return player1Score + "-" + pointScoreMapping[point2];
+        if (player1.point < 4 && player2.point < 4 && player1.point + player2.point < 6) {
+            if (player1.point == player2.point) {
+                return getPlayerScore(player1.point) + "-All";
+            } else {
+                return getPlayerScore(player1.point) + "-" + getPlayerScore(player2.point);
             }
-        } else if (point1 == point2) {
+        } else if (player1.point == player2.point) {
             return "Deuce";
         } else {
-            String leadPlayerName = point1 > point2 ? player1Name : player2Name;
-            if ((point1 - point2) * (point1 - point2) == 1) {
+            String leadPlayerName = player1.point > player2.point ? player1.name : player2.name;
+            if (Math.abs(player1.point - player2.point) == 1) {
                 return "Advantage " + leadPlayerName;
-            }else {
+            } else {
                 return "Win for " + leadPlayerName;
             }
         }
     }
 
-    public void wonPoint(String playerName) {
-        if (Objects.equals(playerName, player1Name))
-            this.point1 += 1;
-        else
-            this.point2 += 1;
+    private String getPlayerScore(int point) {
+        String[] pointScoreMapping = {"Love", "Fifteen", "Thirty", "Forty"};
+        return pointScoreMapping[point];
+    }
 
+    public void wonPoint(String playerName) {
+        if (Objects.equals(playerName, player1.name)) {
+            this.player1.wonPoint();
+        } else {
+            this.player2.wonPoint();
+        }
+    }
+
+    public static class Player {
+        int point;
+        String name;
+
+        private void wonPoint() {
+            point++;
+        }
     }
 
 }
