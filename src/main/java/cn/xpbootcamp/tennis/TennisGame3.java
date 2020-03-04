@@ -1,6 +1,8 @@
 package cn.xpbootcamp.tennis;
 
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 public class TennisGame3 implements TennisGame {
 
@@ -32,15 +34,15 @@ public class TennisGame3 implements TennisGame {
             point++;
         }
 
-        private String getScoreIfGameProcessing(Player otherPlayer) {
-            if (point < 4 && otherPlayer.point < 4 && point + otherPlayer.point < 6) {
-                if (point == otherPlayer.point) {
-                    return getPlayerScore() + "-All";
-                } else {
-                    return getPlayerScore() + "-" + otherPlayer.getPlayerScore();
-                }
+        private Optional<String> getScoreIfGameProcessing(Player otherPlayer) {
+            if (point >= 4 || otherPlayer.point >= 4 || point + otherPlayer.point >= 6) {
+                return Optional.empty();
             }
-            return null;
+            if (point == otherPlayer.point) {
+                return Optional.of(getPlayerScore() + "-All");
+            } else {
+                return Optional.of(getPlayerScore() + "-" + otherPlayer.getPlayerScore());
+            }
         }
 
         private String getPlayerScore() {
@@ -48,33 +50,28 @@ public class TennisGame3 implements TennisGame {
             return pointScoreMapping[point];
         }
 
-        private String getScoreIfAdvantageOrWin(Player otherPlayer) {
+        private Optional<String> getScoreIfAdvantageOrWin(Player otherPlayer) {
             String leadPlayerName = point > otherPlayer.point ? name : otherPlayer.name;
             if (Math.abs(point - otherPlayer.point) == 1) {
-                return "Advantage " + leadPlayerName;
+                return Optional.of("Advantage " + leadPlayerName);
             } else {
-                return "Win for " + leadPlayerName;
+                return Optional.of("Win for " + leadPlayerName);
             }
         }
 
-        private String getScoreIfDeuce(Player otherPlayer) {
+        private Optional<String> getScoreIfDeuce(Player otherPlayer) {
             if (point == otherPlayer.point) {
-                return "Deuce";
+                return Optional.of("Deuce");
             }
-            return null;
+            return Optional.empty();
         }
 
-        private String getScoreTextWith(Player otherPlayer) {
-            String score = getScoreIfGameProcessing(otherPlayer);
-            if (score != null) {
-                return score;
-            }
-            score = getScoreIfDeuce(otherPlayer);
-            if (score != null) {
-                return score;
-            }
-            score = getScoreIfAdvantageOrWin(otherPlayer);
-            return score;
+        public String getScoreTextWith(Player otherPlayer) {
+            return Stream.of(
+                    getScoreIfGameProcessing(otherPlayer),
+                    getScoreIfDeuce(otherPlayer),
+                    getScoreIfAdvantageOrWin(otherPlayer)
+            ).filter(Optional::isPresent).map(Optional::get).findFirst().orElse(null);
         }
     }
 
