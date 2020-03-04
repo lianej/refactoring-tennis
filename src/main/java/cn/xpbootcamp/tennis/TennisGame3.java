@@ -17,18 +17,11 @@ public class TennisGame3 implements TennisGame {
         if (score != null) {
             return score;
         }
-        if (player1.point == player2.point) {
-            score = "Deuce";
-        }
+        score = player1.getScoreIfDeuce(this.player2);
         if (score != null) {
             return score;
         }
-        String leadPlayerName = player1.point > player2.point ? player1.name : player2.name;
-        if (Math.abs(player1.point - player2.point) == 1) {
-            score = "Advantage " + leadPlayerName;
-        } else {
-            score = "Win for " + leadPlayerName;
-        }
+        score = player1.getScoreIfAdvantageOrWin(this.player2);
         return score;
     }
 
@@ -62,6 +55,22 @@ public class TennisGame3 implements TennisGame {
         private String getPlayerScore() {
             String[] pointScoreMapping = {"Love", "Fifteen", "Thirty", "Forty"};
             return pointScoreMapping[point];
+        }
+
+        private String getScoreIfAdvantageOrWin(Player otherPlayer) {
+            String leadPlayerName = point > otherPlayer.point ? name : otherPlayer.name;
+            if (Math.abs(point - otherPlayer.point) == 1) {
+                return "Advantage " + leadPlayerName;
+            } else {
+                return "Win for " + leadPlayerName;
+            }
+        }
+
+        private String getScoreIfDeuce(Player otherPlayer) {
+            if (point == otherPlayer.point) {
+                return "Deuce";
+            }
+            return null;
         }
     }
 
