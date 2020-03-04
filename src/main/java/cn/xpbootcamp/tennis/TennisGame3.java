@@ -13,27 +13,23 @@ public class TennisGame3 implements TennisGame {
     }
 
     public String getScore() {
-        if (player1.point < 4 && player2.point < 4 && player1.point + player2.point < 6) {
-            if (player1.point == player2.point) {
-                return getPlayerScore(player1.point) + "-All";
-            } else {
-                return getPlayerScore(player1.point) + "-" + getPlayerScore(player2.point);
-            }
-        } else if (player1.point == player2.point) {
-            return "Deuce";
-        } else {
-            String leadPlayerName = player1.point > player2.point ? player1.name : player2.name;
-            if (Math.abs(player1.point - player2.point) == 1) {
-                return "Advantage " + leadPlayerName;
-            } else {
-                return "Win for " + leadPlayerName;
-            }
+        String score = player1.getScoreIfGameProcessing(this.player2);
+        if (score != null) {
+            return score;
         }
-    }
-
-    private String getPlayerScore(int point) {
-        String[] pointScoreMapping = {"Love", "Fifteen", "Thirty", "Forty"};
-        return pointScoreMapping[point];
+        if (player1.point == player2.point) {
+            score = "Deuce";
+        }
+        if (score != null) {
+            return score;
+        }
+        String leadPlayerName = player1.point > player2.point ? player1.name : player2.name;
+        if (Math.abs(player1.point - player2.point) == 1) {
+            score = "Advantage " + leadPlayerName;
+        } else {
+            score = "Win for " + leadPlayerName;
+        }
+        return score;
     }
 
     public void wonPoint(String playerName) {
@@ -50,6 +46,22 @@ public class TennisGame3 implements TennisGame {
 
         private void wonPoint() {
             point++;
+        }
+
+        private String getScoreIfGameProcessing(Player otherPlayer) {
+            if (point < 4 && otherPlayer.point < 4 && point + otherPlayer.point < 6) {
+                if (point == otherPlayer.point) {
+                    return getPlayerScore() + "-All";
+                } else {
+                    return getPlayerScore() + "-" + otherPlayer.getPlayerScore();
+                }
+            }
+            return null;
+        }
+
+        private String getPlayerScore() {
+            String[] pointScoreMapping = {"Love", "Fifteen", "Thirty", "Forty"};
+            return pointScoreMapping[point];
         }
     }
 
