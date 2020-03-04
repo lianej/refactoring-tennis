@@ -10,8 +10,8 @@ public class TennisGame2 implements TennisGame {
 
 
     public TennisGame2(String player1Name, String player2Name) {
-        this.player1.playerName = player1Name;
-        this.player2.playerName = player2Name;
+        this.player1.name = player1Name;
+        this.player2.name = player2Name;
     }
 
     public String getScore() {
@@ -19,22 +19,18 @@ public class TennisGame2 implements TennisGame {
 
         ifProgressing();
 
-        ifAdvantage();
-
-        Optional<String> text = player1.ifWin(this.player2);
-        if(text.isPresent()){
-            scoreText = text.get();
-        }
+        player1.ifAdvantage(this.player2).ifPresent(s -> scoreText = s);
+        player1.ifWin(this.player2).ifPresent(s -> scoreText = s);
         return scoreText;
     }
 
     private void ifDeuce() {
-        if (player1.playerPoint == player2.playerPoint) {
-            if (player1.playerPoint == 0) {
+        if (player1.point == player2.point) {
+            if (player1.point == 0) {
                 this.scoreText = "Love-All";
-            } else if (player1.playerPoint == 1) {
+            } else if (player1.point == 1) {
                 this.scoreText = "Fifteen-All";
-            } else if (player1.playerPoint == 2) {
+            } else if (player1.point == 2) {
                 this.scoreText = "Thirty-All";
             } else {
                 this.scoreText = "Deuce";
@@ -43,41 +39,46 @@ public class TennisGame2 implements TennisGame {
     }
 
     private void ifProgressing() {
-        if (player1.playerPoint == player2.playerPoint || player1.playerPoint > 3 || player2.playerPoint > 3) {
+        if (player1.point == player2.point || player1.point > 3 || player2.point > 3) {
             return;
         }
         String[] mapping = new String[]{"Love", "Fifteen", "Thirty", "Forty"};
-        this.scoreText = String.format("%s-%s", mapping[player1.playerPoint], mapping[player2.playerPoint]);
+        this.scoreText = String.format("%s-%s", mapping[player1.point], mapping[player2.point]);
 
-    }
-
-    private void ifAdvantage() {
-        if (player1.playerPoint > player2.playerPoint && player2.playerPoint >= 3) {
-            this.scoreText = "Advantage " + player1.playerName;
-        }
-
-        if (player2.playerPoint > player1.playerPoint && player1.playerPoint >= 3) {
-            this.scoreText = "Advantage " + player2.playerName;
-        }
     }
 
     public void wonPoint(String player) {
-        if (player.equals(player1.playerName))
-            player1.playerPoint++;
-        else
-            player2.playerPoint++;
+        if (player.equals(player1.name)) {
+            player1.wonPoint();
+        } else
+            player2.wonPoint();
     }
 
     private static class Player {
-        public String playerName;
-        public int playerPoint = 0;
+        private String name;
+        private int point = 0;
 
         private Optional<String> ifWin(Player otherPlayer) {
-            if (playerPoint >= 4 && otherPlayer.playerPoint >= 0 && (playerPoint - otherPlayer.playerPoint) >= 2) {
-                return Optional.of("Win for " + playerName);
+            if (point >= 4 && otherPlayer.point >= 0 && (point - otherPlayer.point) >= 2) {
+                return Optional.of("Win for " + name);
             }
-            if (otherPlayer.playerPoint >= 4 && playerPoint >= 0 && (otherPlayer.playerPoint - playerPoint) >= 2) {
-                return Optional.of("Win for " + otherPlayer.playerName);
+            if (otherPlayer.point >= 4 && point >= 0 && (otherPlayer.point - point) >= 2) {
+                return Optional.of("Win for " + otherPlayer.name);
+            }
+            return Optional.empty();
+        }
+
+        private void wonPoint() {
+            point++;
+        }
+
+        private Optional<String> ifAdvantage(Player otherPlayer) {
+            if (point > otherPlayer.point && otherPlayer.point >= 3) {
+                return Optional.of("Advantage " + name);
+            }
+
+            if (otherPlayer.point > point && point >= 3) {
+                return Optional.of("Advantage " + otherPlayer.name);
             }
             return Optional.empty();
         }
