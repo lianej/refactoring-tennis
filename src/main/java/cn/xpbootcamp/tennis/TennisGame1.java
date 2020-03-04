@@ -4,54 +4,51 @@ import java.util.Objects;
 
 public class TennisGame1 implements TennisGame {
 
-    private int player1Score;
-    private String player1Name;
+    private Player player1;
+    private Player player2;
 
-    private int player2Score;
-    private String player2Name;
-
-    static String[] scoreMapping = new String[]{"Love", "Fifteen", "Thirty", "Forty"};
 
     public TennisGame1(String player1Name, String player2Name) {
-        this.player1Name = player1Name;
-        this.player2Name = player2Name;
+        this.player1 = new Player(player1Name, 0);
+        this.player2 = new Player(player2Name, 0);
     }
 
     public void wonPoint(String playerName) {
-        if (Objects.equals(playerName, player1Name)) {
-            player1Score += 1;
+        if (Objects.equals(playerName, player1.name)) {
+            player1.wonPoint();
         } else {
-            player2Score += 1;
+            player2.wonPoint();
         }
     }
 
     public String getScore() {
-        if (player1Score < 4 && player2Score < 4) {
-            return formatScoreBeforeScoreBothLessThan4();
+        if (player1.isScoreLessThan4() && player2.isScoreLessThan4()) {
+            return formatScoreIfScoreBothLessThan4();
         } else {
-            return getScoreText();
+            return formatScore();
         }
     }
 
-
     private Player getBackwardPlayer() {
-        if (player1Score > player2Score) {
-            return new Player(player2Name, player2Score);
+        if (player1.score > player2.score) {
+            return player2;
         } else {
-            return new Player(player1Name, player1Score);
+            return player1;
         }
     }
 
     private Player getLeadPlayer() {
-        if (player1Score > player2Score) {
-            return new Player(player1Name, player1Score);
+        if (player1.score > player2.score) {
+            return player1;
         } else {
-            return new Player(player2Name, player2Score);
+            return player2;
         }
     }
 
-    private String formatScoreBeforeScoreBothLessThan4() {
-        String scoreText = String.format("%s-%s", scoreMapping[player1Score], scoreMapping[player2Score]);
+    private String formatScoreIfScoreBothLessThan4() {
+        String[] scoreTextMapping = new String[]{"Love", "Fifteen", "Thirty", "Forty"};
+        String scoreText = String.format("%s-%s",
+                scoreTextMapping[player1.score], scoreTextMapping[player2.score]);
         switch (scoreText) {
             case "Love-Love":
                 return "Love-All";
@@ -66,14 +63,14 @@ public class TennisGame1 implements TennisGame {
         }
     }
 
-    private String getScoreText() {
+    private String formatScore() {
         Player leadPlayer = getLeadPlayer();
         int delta = leadPlayer.score - getBackwardPlayer().score;
-        if(delta == 0){
+        if (delta == 0) {
             return "Deuce";
-        }else if(delta == 1){
+        } else if (delta == 1) {
             return "Advantage " + leadPlayer.name;
-        }else {
+        } else {
             return "Win for " + leadPlayer.name;
         }
     }
@@ -85,6 +82,14 @@ public class TennisGame1 implements TennisGame {
         public Player(String name, int score) {
             this.name = name;
             this.score = score;
+        }
+
+        private boolean isScoreLessThan4() {
+            return score < 4;
+        }
+
+        private void wonPoint() {
+            score++;
         }
     }
 }
