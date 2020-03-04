@@ -29,7 +29,24 @@ public class TennisGame1 implements TennisGame {
         if (player1Score < 4 && player2Score < 4) {
             return formatScoreBeforeScoreBothLessThan4();
         } else {
-            return new Ranking().getScoreText();
+            return getScoreText();
+        }
+    }
+
+
+    private Player getBackwardPlayer() {
+        if (player1Score > player2Score) {
+            return new Player(player2Name, player2Score);
+        } else {
+            return new Player(player1Name, player1Score);
+        }
+    }
+
+    private Player getLeadPlayer() {
+        if (player1Score > player2Score) {
+            return new Player(player1Name, player1Score);
+        } else {
+            return new Player(player2Name, player2Score);
         }
     }
 
@@ -49,39 +66,25 @@ public class TennisGame1 implements TennisGame {
         }
     }
 
-    private class Ranking {
-        Player leadPlayer;
-        Player backwardPlayer;
-
-        public Ranking() {
-            if (player1Score > player2Score) {
-                this.leadPlayer = new Player(player1Name, player1Score);
-                this.backwardPlayer = new Player(player2Name, player2Score);
-            } else {
-                this.leadPlayer = new Player(player2Name, player2Score);
-                this.backwardPlayer = new Player(player1Name, player1Score);
-            }
-        }
-
-        private String getScoreText() {
-            int delta = leadPlayer.score - backwardPlayer.score;
-            if(delta == 0){
-                return "Deuce";
-            }else if(delta == 1){
-                return "Advantage " + leadPlayer.name;
-            }else {
-                return "Win for " + leadPlayer.name;
-            }
+    private String getScoreText() {
+        Player leadPlayer = getLeadPlayer();
+        int delta = leadPlayer.score - getBackwardPlayer().score;
+        if(delta == 0){
+            return "Deuce";
+        }else if(delta == 1){
+            return "Advantage " + leadPlayer.name;
+        }else {
+            return "Win for " + leadPlayer.name;
         }
     }
-}
 
-class Player {
-    String name;
-    int score;
+    private static class Player {
+        String name;
+        int score;
 
-    public Player(String name, int score) {
-        this.name = name;
-        this.score = score;
+        public Player(String name, int score) {
+            this.name = name;
+            this.score = score;
+        }
     }
 }

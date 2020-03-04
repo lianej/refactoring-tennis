@@ -51,12 +51,12 @@ public class TennisGame2 implements TennisGame {
     }
 
     private void ifAdvantage() {
-        if (player1Point > player2Point && player2Point >= 3) {
-            this.scoreText = "Advantage " + player1Name;
-        }
+            if (player1Point > player2Point && player2Point >= 3) {
+                this.scoreText = "Advantage " + player1Name;
+            }
 
-        if (player2Point > player1Point && player1Point >= 3) {
-            this.scoreText = "Advantage " + player2Name;
+            if (player2Point > player1Point && player1Point >= 3) {
+                this.scoreText = "Advantage " + player2Name;
         }
     }
 
