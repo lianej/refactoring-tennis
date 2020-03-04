@@ -13,16 +13,7 @@ public class TennisGame3 implements TennisGame {
     }
 
     public String getScore() {
-        String score = player1.getScoreIfGameProcessing(this.player2);
-        if (score != null) {
-            return score;
-        }
-        score = player1.getScoreIfDeuce(this.player2);
-        if (score != null) {
-            return score;
-        }
-        score = player1.getScoreIfAdvantageOrWin(this.player2);
-        return score;
+        return player1.getScoreTextWith(this.player2);
     }
 
     public void wonPoint(String playerName) {
@@ -71,6 +62,19 @@ public class TennisGame3 implements TennisGame {
                 return "Deuce";
             }
             return null;
+        }
+
+        private String getScoreTextWith(Player otherPlayer) {
+            String score = getScoreIfGameProcessing(otherPlayer);
+            if (score != null) {
+                return score;
+            }
+            score = getScoreIfDeuce(otherPlayer);
+            if (score != null) {
+                return score;
+            }
+            score = getScoreIfAdvantageOrWin(otherPlayer);
+            return score;
         }
     }
 
