@@ -26,19 +26,17 @@ public class TennisGame2 implements TennisGame {
     }
 
     private void ifDeuce() {
-        if (player1Point == player2Point && player1Point < 4) {
-            String score = "";
-            if (player1Point == 0)
-                score = "Love";
-            if (player1Point == 1)
-                score = "Fifteen";
-            if (player1Point == 2)
-                score = "Thirty";
-            score += "-All";
-            this.scoreText = score;
+        if (player1Point == player2Point) {
+            if (player1Point == 0) {
+                this.scoreText = "Love-All";
+            } else if (player1Point == 1) {
+                this.scoreText = "Fifteen-All";
+            } else if (player1Point == 2) {
+                this.scoreText = "Thirty-All";
+            } else {
+                this.scoreText = "Deuce";
+            }
         }
-        if (player1Point == player2Point && player1Point >= 3)
-            this.scoreText = "Deuce";
     }
 
     private void ifProgressing() {
@@ -51,12 +49,12 @@ public class TennisGame2 implements TennisGame {
     }
 
     private void ifAdvantage() {
-            if (player1Point > player2Point && player2Point >= 3) {
-                this.scoreText = "Advantage " + player1Name;
-            }
+        if (player1Point > player2Point && player2Point >= 3) {
+            this.scoreText = "Advantage " + player1Name;
+        }
 
-            if (player2Point > player1Point && player1Point >= 3) {
-                this.scoreText = "Advantage " + player2Name;
+        if (player2Point > player1Point && player1Point >= 3) {
+            this.scoreText = "Advantage " + player2Name;
         }
     }
 
