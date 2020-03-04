@@ -7,21 +7,13 @@ public class TennisGame2 implements TennisGame {
     public final Player player1 = new Player();
     public final Player player2 = new Player();
 
-    private String scoreText;
-
-
     public TennisGame2(String player1Name, String player2Name) {
         this.player1.name = player1Name;
         this.player2.name = player2Name;
     }
 
     public String getScore() {
-        return Stream.of(
-                player1.getScoreTextIfWinAgainst(this.player2),
-                player1.getScoreTextIfAdvantageOver(this.player2),
-                player1.getScoreTextIfDeuceFor(this.player2),
-                player1.getScoreTextIfGameProgressing(this.player2)
-        ).filter(Optional::isPresent).map(Optional::get).findFirst().orElse(null);
+        return player1.getScoreTextWith(this.player2);
     }
 
     public void wonPoint(String player) {
@@ -88,7 +80,15 @@ public class TennisGame2 implements TennisGame {
             String[] mapping = new String[]{"Love", "Fifteen", "Thirty", "Forty"};
             String scoreText = String.format("%s-%s", mapping[point], mapping[otherPlayer.point]);
             return Optional.of(scoreText);
+        }
 
+        public String getScoreTextWith(Player otherPlayer) {
+            return Stream.of(
+                    getScoreTextIfWinAgainst(otherPlayer),
+                    getScoreTextIfAdvantageOver(otherPlayer),
+                    getScoreTextIfDeuceFor(otherPlayer),
+                    getScoreTextIfGameProgressing(otherPlayer)
+            ).filter(Optional::isPresent).map(Optional::get).findFirst().orElse(null);
         }
     }
 }
