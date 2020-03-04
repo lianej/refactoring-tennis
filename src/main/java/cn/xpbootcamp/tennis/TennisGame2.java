@@ -15,36 +15,11 @@ public class TennisGame2 implements TennisGame {
     }
 
     public String getScore() {
-        ifDeuce();
-
-        ifProgressing();
-
+        player1.ifDeuce(this.player2).ifPresent(s -> scoreText = s);
+        player1.ifProgressing(this.player2).ifPresent(s -> scoreText = s);
         player1.ifAdvantage(this.player2).ifPresent(s -> scoreText = s);
         player1.ifWin(this.player2).ifPresent(s -> scoreText = s);
         return scoreText;
-    }
-
-    private void ifDeuce() {
-        if (player1.point == player2.point) {
-            if (player1.point == 0) {
-                this.scoreText = "Love-All";
-            } else if (player1.point == 1) {
-                this.scoreText = "Fifteen-All";
-            } else if (player1.point == 2) {
-                this.scoreText = "Thirty-All";
-            } else {
-                this.scoreText = "Deuce";
-            }
-        }
-    }
-
-    private void ifProgressing() {
-        if (player1.point == player2.point || player1.point > 3 || player2.point > 3) {
-            return;
-        }
-        String[] mapping = new String[]{"Love", "Fifteen", "Thirty", "Forty"};
-        this.scoreText = String.format("%s-%s", mapping[player1.point], mapping[player2.point]);
-
     }
 
     public void wonPoint(String player) {
@@ -81,6 +56,37 @@ public class TennisGame2 implements TennisGame {
                 return Optional.of("Advantage " + otherPlayer.name);
             }
             return Optional.empty();
+        }
+
+        private Optional<String> ifDeuce(Player otherPlayer) {
+            if (point == otherPlayer.point) {
+                return Optional.of(getDeuceText());
+            }
+            return Optional.empty();
+        }
+
+        private String getDeuceText() {
+            String scoreText;
+            if (point == 0) {
+                scoreText = "Love-All";
+            } else if (point == 1) {
+                scoreText = "Fifteen-All";
+            } else if (point == 2) {
+                scoreText = "Thirty-All";
+            } else {
+                scoreText = "Deuce";
+            }
+            return scoreText;
+        }
+
+        private Optional<String> ifProgressing(Player otherPlayer) {
+            if (point == otherPlayer.point || point > 3 || otherPlayer.point > 3) {
+                return Optional.empty();
+            }
+            String[] mapping = new String[]{"Love", "Fifteen", "Thirty", "Forty"};
+            String scoreText = String.format("%s-%s", mapping[point], mapping[otherPlayer.point]);
+            return Optional.of(scoreText);
+
         }
     }
 }
