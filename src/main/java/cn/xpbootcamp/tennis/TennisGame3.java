@@ -16,16 +16,23 @@ public class TennisGame3 implements TennisGame {
     }
 
     public String getScore() {
-        String s;
-        if (point1 < 4 && point2 < 4 && !(point1 + point2 == 6)) {
-            String[] p = new String[]{"Love", "Fifteen", "Thirty", "Forty"};
-            s = p[point1];
-            return (point1 == point2) ? s + "-All" : s + "-" + p[point2];
+        if (point1 < 4 && point2 < 4 && point1 + point2 < 6) {
+            String[] pointScoreMapping = new String[]{"Love", "Fifteen", "Thirty", "Forty"};
+            String player1Score = pointScoreMapping[point1];
+            if (point1 == point2){
+                return player1Score + "-All";
+            }else {
+                return player1Score + "-" + pointScoreMapping[point2];
+            }
+        } else if (point1 == point2) {
+            return "Deuce";
         } else {
-            if (point1 == point2)
-                return "Deuce";
-            s = point1 > point2 ? player1Name : player2Name;
-            return ((point1 - point2)*(point1 - point2) == 1) ? "Advantage " + s : "Win for " + s;
+            String leadPlayerName = point1 > point2 ? player1Name : player2Name;
+            if ((point1 - point2) * (point1 - point2) == 1) {
+                return "Advantage " + leadPlayerName;
+            }else {
+                return "Win for " + leadPlayerName;
+            }
         }
     }
 
