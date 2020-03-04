@@ -1,6 +1,7 @@
 package cn.xpbootcamp.tennis;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public class TennisGame2 implements TennisGame {
     public final Player player1 = new Player();
@@ -15,11 +16,12 @@ public class TennisGame2 implements TennisGame {
     }
 
     public String getScore() {
-        player1.ifDeuce(this.player2).ifPresent(s -> scoreText = s);
-        player1.ifProgressing(this.player2).ifPresent(s -> scoreText = s);
-        player1.ifAdvantage(this.player2).ifPresent(s -> scoreText = s);
-        player1.ifWin(this.player2).ifPresent(s -> scoreText = s);
-        return scoreText;
+        return Stream.of(
+                player1.getScoreTextIfWinAgainst(this.player2),
+                player1.getScoreTextIfAdvantageOver(this.player2),
+                player1.getScoreTextIfDeuceFor(this.player2),
+                player1.getScoreTextIfGameProgressing(this.player2)
+        ).filter(Optional::isPresent).map(Optional::get).findFirst().orElse(null);
     }
 
     public void wonPoint(String player) {
@@ -33,7 +35,7 @@ public class TennisGame2 implements TennisGame {
         private String name;
         private int point = 0;
 
-        private Optional<String> ifWin(Player otherPlayer) {
+        private Optional<String> getScoreTextIfWinAgainst(Player otherPlayer) {
             if (point >= 4 && otherPlayer.point >= 0 && (point - otherPlayer.point) >= 2) {
                 return Optional.of("Win for " + name);
             }
@@ -47,7 +49,7 @@ public class TennisGame2 implements TennisGame {
             point++;
         }
 
-        private Optional<String> ifAdvantage(Player otherPlayer) {
+        private Optional<String> getScoreTextIfAdvantageOver(Player otherPlayer) {
             if (point > otherPlayer.point && otherPlayer.point >= 3) {
                 return Optional.of("Advantage " + name);
             }
@@ -58,7 +60,7 @@ public class TennisGame2 implements TennisGame {
             return Optional.empty();
         }
 
-        private Optional<String> ifDeuce(Player otherPlayer) {
+        private Optional<String> getScoreTextIfDeuceFor(Player otherPlayer) {
             if (point == otherPlayer.point) {
                 return Optional.of(getDeuceText());
             }
@@ -79,7 +81,7 @@ public class TennisGame2 implements TennisGame {
             return scoreText;
         }
 
-        private Optional<String> ifProgressing(Player otherPlayer) {
+        private Optional<String> getScoreTextIfGameProgressing(Player otherPlayer) {
             if (point == otherPlayer.point || point > 3 || otherPlayer.point > 3) {
                 return Optional.empty();
             }
